@@ -13,12 +13,10 @@ end = 3
 
 controller = FeedbackLinearizationController(Tp)
 
-# Trajektoria
 traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
 
 Q, Q_d, u, T = simulate("PYBULLET", traj_gen, controller, Tp, end)
 
-# Rysowanie wykresow
 plt.subplot(221)
 plt.plot(T, Q[:, 0], 'r')
 plt.plot(T, Q_d[:, 0], 'b')

@@ -17,10 +17,8 @@ Tp = 0.01
 end = 3.
 
 
-# TODO: Switch to MMAC as soon as you implement it
 controller = MMAController(Tp)
 #controller = FeedbackLinearizationController(Tp)
-#controller = DummyController(Tp)
 
 """
 Here you have some trajectory generators. You can use them to check your implementations.

@@ -13,7 +13,6 @@ end = 5
 traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
 # traj_gen = Poly3(np.array([0., 0.]), np.array([pi/4, pi/6]), end)
 
-# M_inv robimy z modelu, ale tu można dać 1, jako że macierz M to kontruje
 b_est_1 = 1.0
 b_est_2 = 1.0
 

@@ -17,18 +17,15 @@ end = 5
 traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
 # traj_gen = Poly3(np.array([0., 0.]), np.array([pi/4, pi/6]), end)
 
-# Przybliżona odwrotność bezwładności ramion
 b_est_1 = 5.0
 b_est_2 = 10.0
 
-# Parametry kontrolera (częstotliwość)
 omega_c = 20.0
 kp_est_1 = omega_c**2
 kp_est_2 = omega_c**2
 kd_est_1 = 2 * omega_c
 kd_est_2 = 2 * omega_c
 
-# Pasmo obserwatora (często przyjmuje się 3-5x większe niż kontrolera)
 p1 = 100.0
 p2 = 100.0
 

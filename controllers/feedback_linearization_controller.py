@@ -13,7 +13,6 @@ class FeedbackLinearizationController(Controller):
         """
         Feedback linearization using self.model
         """
-        # Wyciągamy aktualne pozycje (q) i prędkości (q_dot) ze stanu robota (x)
         q = np.array([x[0], x[1]])
         q_dot = np.array([x[2], x[3]])
 
@@ -21,18 +20,14 @@ class FeedbackLinearizationController(Controller):
         q_r_dot = np.array(q_r_dot)
         q_r_ddot = np.array(q_r_ddot)
 
-        # Liczymy uchyb pozycji i prędkości
         e = q_r - q
         e_dot = q_r_dot - q_dot
 
-        # Sygnał zewnętrznego kontrolera PD
         v = q_r_ddot + self.Kd @ e_dot + self.Kp @ e
 
-        # Wywołujemy macierze z modelu, podając pełny wektor stanu x
         M = self.model.M(x)
         C = self.model.C(x)
 
-        # Równanie FLC kasujące nieliniowości
         tau = M @ v + C @ q_dot
 
         return tau
