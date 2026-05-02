@@ -12,7 +12,9 @@ class ADRController(Controller):
     def calculate_control(self, x, q_d, q_d_dot, q_d_ddot):
         u = []
         for i, controller in enumerate(self.joint_controllers):
-            u.append(controller.calculate_control([x[i], x[i+2]], q_d[i], q_d_dot[i], q_d_ddot[i]))
-        u = np.array(u)[:, np.newaxis]
+            u.append(controller.calculate_control([x[i], x[i + 2]], q_d[i], q_d_dot[i], q_d_ddot[i]))
+
+        # Zmiana tutaj: spłaszczamy wynik do jednowymiarowej tablicy (2,)
+        u = np.array(u).flatten()
         return u
 

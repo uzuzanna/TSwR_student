@@ -9,16 +9,42 @@ class ADRCJointController(Controller):
         self.kp = kp
         self.kd = kd
 
-        A = None
-        B = None
-        L = None
-        W = None
-        self.eso = ESO(A, B, W, L, q0, Tp)
+        # Macierz A opisująca relacje między zmiennymi stanu ESO (pozycja, prędkość, zakłócenie)
+        A = np.array([[0, 1, 0],
+                      [0, 0, 1],
+                      [0, 0, 0]])
+        # Macierz B - wpływ sterowania u na zmienne stanu (tylko na prędkość)
+        B = np.array([[0],
+                      [self.b],
+                      [0]])
+        # Wektor wzmocnień L dla obserwatora, dobierany na podstawie parametru 'p'
+        # Wynika on z rozstawienia biegunów (s+p)^3 = 0
+        L = np.array([[3 * p],
+                      [3 * p ** 2],
+                      [p ** 3]])
+        # Macierz wyjścia
+        W = np.array([[1, 0, 0]])
+
+        # Inicjalizacja stanu ESO: [pozycja, prędkość, zakłócenie]
+        # Padujemy wektor początkowy zerem dla początkowego zakłócenia
+        state0 = np.array([q0[0], q0[1], 0.0])
+        self.eso = ESO(A, B, W, L, state0, Tp)
 
     def set_b(self, b):
-        ### TODO update self.b and B in ESO
-        return NotImplementedError
+        self.b = b
+        self.eso.B = np.array([[0], [self.b], [0]])
 
     def calculate_control(self, x, q_d, q_d_dot, q_d_ddot):
-        ### TODO implement ADRC
-        return NotImplementedError
+        q = x[0]
+
+        self.eso.update(q, self.eso.u)
+        q_est, q_dot_est, f_est = self.eso.get_state()
+
+        e = q_d - q_est
+        e_dot = q_d_dot - q_dot_est
+        v = q_d_ddot + self.kd * e_dot + self.kp * e
+
+        # Zmiana tutaj: upewniamy się, że wynik u jest czystą liczbą (skalarem)
+        u = float((v - f_est) / self.b)
+
+        return u
